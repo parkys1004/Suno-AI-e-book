@@ -83,12 +83,12 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
              if (!paragraph.trim()) return null;
 
              return (
-                <p key={pIdx} className="mb-6 last:mb-0 leading-8 text-lg text-slate-700 dark:text-slate-300 text-justify break-keep">
+                <p key={pIdx} className="mb-6 last:mb-0 leading-8 text-lg text-slate-700 dark:text-slate-300 text-justify break-keep whitespace-pre-line">
                 {paragraph.split(/(\*\*.*?\*\*|`.*?`)/g).map((subPart, subIdx) => {
                     // Bold text (**text**)
                     if (subPart.startsWith('**') && subPart.endsWith('**')) {
                     return (
-                        <strong key={subIdx} className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-purple-700 dark:from-indigo-300 dark:to-purple-300">
+                        <strong key={subIdx} className="font-extrabold text-slate-800 dark:text-slate-100">
                         {subPart.slice(2, -2)}
                         </strong>
                     );
@@ -185,7 +185,7 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
                       </div>
                       <div>
                          <span className="text-xs font-black uppercase tracking-widest text-indigo-500 dark:text-indigo-400 block mb-2">Practical Tip</span>
-                         <p className="text-base font-medium text-indigo-900 dark:text-indigo-100 opacity-90 leading-relaxed">
+                         <p className="text-base font-medium text-indigo-900 dark:text-indigo-100 opacity-90 leading-relaxed whitespace-pre-line">
                             이 예시는 수익화 과정에서 빈번하게 마주치는 상황입니다. 반드시 메모해두세요.
                          </p>
                       </div>
