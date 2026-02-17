@@ -86,10 +86,12 @@ const CodeBlock: React.FC<{ code: string }> = ({ code }) => {
 // Interactive Checklist Component
 const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = ({ content, storageKey }) => {
   const lines = content.split('\n');
-  // Identify checkable lines to maintain state index mapping
-  const checkableIndices = lines.map((line, idx) => 
-    line.trim().startsWith('* [ ]') ? idx : -1
-  ).filter(idx => idx !== -1);
+  
+  // Identify all checkable lines (both main * [ ] and sub - [ ])
+  const checkableIndices = lines.map((line, idx) => {
+    const trimmed = line.trim();
+    return (trimmed.startsWith('* [ ]') || trimmed.startsWith('- [ ]')) ? idx : -1;
+  }).filter(idx => idx !== -1);
 
   const [checkedState, setCheckedState] = useState<{ [key: number]: boolean }>({});
 
@@ -119,14 +121,14 @@ const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = 
     <div className="space-y-4">
       {/* Progress Bar */}
       {totalChecks > 0 && (
-        <div className="mb-8 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800/50">
-          <div className="flex justify-between items-end mb-2">
-            <span className="text-sm font-bold text-indigo-900 dark:text-indigo-300">Checklist Progress</span>
-            <span className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400">{progress}% ({checkedCount}/{totalChecks})</span>
+        <div className="mb-8 p-5 bg-white dark:bg-slate-900 rounded-2xl border border-indigo-100 dark:border-indigo-900/50 shadow-sm">
+          <div className="flex justify-between items-end mb-3">
+            <span className="text-sm font-extrabold text-indigo-900 dark:text-indigo-300 tracking-tight">PROGRESS</span>
+            <span className="text-sm font-mono font-bold text-indigo-600 dark:text-indigo-400">{progress}% ({checkedCount}/{totalChecks})</span>
           </div>
-          <div className="w-full h-2 bg-indigo-200 dark:bg-indigo-800 rounded-full overflow-hidden">
+          <div className="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
              <div 
-               className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500 ease-out"
+               className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 transition-all duration-700 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]"
                style={{ width: `${progress}%` }}
              ></div>
           </div>
@@ -134,59 +136,57 @@ const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = 
       )}
 
       {lines.map((line, idx) => {
-        // Checkbox Item
-        if (line.trim().startsWith('* [ ]')) {
-          const text = line.replace(/^\*\s*\[\s*\]\s*/, '');
+        const trimmed = line.trim();
+        const isMainItem = trimmed.startsWith('* [ ]');
+        const isSubItem = trimmed.startsWith('- [ ]');
+
+        if (isMainItem || isSubItem) {
+          const text = trimmed.replace(/^(\*|-)\s*\[\s*\]\s*/, '');
           const isChecked = !!checkedState[idx];
           
           return (
             <div 
               key={idx} 
               onClick={() => toggleCheck(idx)}
-              className={`flex items-start gap-3 p-3 rounded-lg transition-all cursor-pointer group ${
+              className={`flex items-start gap-3 p-3 rounded-xl transition-all cursor-pointer group select-none ${
+                isSubItem ? 'ml-6 sm:ml-8 pl-4 border-l-2 border-slate-100 dark:border-slate-800' : ''
+              } ${
                 isChecked 
                   ? 'bg-emerald-50/50 dark:bg-emerald-900/10' 
                   : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
               }`}
             >
-              <button className={`mt-0.5 transition-colors ${isChecked ? 'text-emerald-500' : 'text-slate-300 dark:text-slate-600 group-hover:text-indigo-400'}`}>
-                {isChecked ? <CheckSquare size={20} fill="currentColor" className="text-white dark:text-slate-900" /> : <Square size={20} />}
-              </button>
-              <span className={`text-base leading-relaxed select-none transition-opacity ${
+              <div className={`mt-0.5 transition-transform duration-200 ${isChecked ? 'scale-110' : 'scale-100 group-hover:scale-105'}`}>
+                 <div className={`transition-colors ${isChecked ? 'text-emerald-500' : 'text-slate-300 dark:text-slate-600 group-hover:text-indigo-400'}`}>
+                    {isChecked ? <CheckSquare size={20} fill="currentColor" className="text-white dark:text-slate-900" /> : <Square size={20} />}
+                 </div>
+              </div>
+              
+              <span className={`text-[15px] leading-relaxed transition-all duration-300 ${
                 isChecked 
                   ? 'text-slate-400 dark:text-slate-500 line-through decoration-slate-300 dark:decoration-slate-600' 
                   : 'text-slate-700 dark:text-slate-300'
-              }`}>
+              } ${isMainItem && !isChecked ? 'font-semibold' : ''}`}>
                 {renderInlineText(text)}
               </span>
             </div>
           );
         }
 
-        // Sub-checkbox Item (indented)
-        if (line.trim().startsWith('- [ ]')) {
-             const text = line.replace(/^-\s*\[\s*\]\s*/, '');
-             return (
-                 <div key={idx} className="ml-8 pl-4 border-l-2 border-slate-100 dark:border-slate-800 py-1 text-sm text-slate-500 dark:text-slate-400">
-                    {renderInlineText(text)}
-                 </div>
-             )
-        }
-
         // Header / Section Title within checklist
-        if (line.trim().startsWith('✅')) {
+        if (trimmed.startsWith('✅')) {
              return (
-                 <h4 key={idx} className="mt-8 mb-4 text-xl font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                 <h4 key={idx} className="mt-10 mb-5 text-lg font-black text-slate-800 dark:text-slate-200 flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border-l-4 border-indigo-500">
                      {renderInlineText(line)}
                  </h4>
              )
         }
 
         // Standard bullet point
-        if (line.trim().startsWith('* ')) {
+        if (trimmed.startsWith('* ')) {
             return (
-                <div key={idx} className="flex gap-3 mb-2">
-                    <span className="text-indigo-500 mt-1.5">•</span>
+                <div key={idx} className="flex gap-3 mb-2 pl-2">
+                    <span className="text-indigo-400 mt-1.5">•</span>
                     <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                         {renderInlineText(line.substring(2))}
                     </p>
@@ -195,11 +195,11 @@ const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = 
         }
 
         // Empty line
-        if (!line.trim()) return <div key={idx} className="h-2"></div>;
+        if (!trimmed) return <div key={idx} className="h-2"></div>;
 
         // Default text
         return (
-          <p key={idx} className="mb-2 leading-relaxed text-slate-700 dark:text-slate-300">
+          <p key={idx} className="mb-2 leading-relaxed text-slate-600 dark:text-slate-400 text-sm">
              {renderInlineText(line)}
           </p>
         );
@@ -213,7 +213,7 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
   // Advanced rendering logic to handle text formatting and code blocks
   const renderContent = (text: string, cardId: string) => {
     // Check if this card content is a checklist (heuristic: contains "* [ ]")
-    if (text.includes('* [ ]')) {
+    if (text.includes('* [ ]') || text.includes('- [ ]')) {
         return <InteractiveChecklist content={text} storageKey={`checklist-${cardId}`} />;
     }
 
