@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X, ArrowUp, ChevronRight, BookOpen, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowUp, ChevronRight, BookOpen, Sparkles, ChevronDown } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { ChapterView } from './components/ChapterView';
 import { BOOK_DATA } from './constants';
@@ -51,7 +51,10 @@ const App: React.FC = () => {
         behavior: 'smooth'
       });
     }
-    setActiveId(id);
+    // Only update activeId if it's not the TOC guide itself (to keep sidebar sync logical)
+    if (id !== 'toc-guide') {
+        setActiveId(id);
+    }
   };
 
   // Scroll logic
@@ -141,49 +144,69 @@ const App: React.FC = () => {
           </button>
         </div>
 
-        <main className="max-w-5xl mx-auto pb-32">
+        <main className="max-w-6xl mx-auto pb-32">
            {/* Amazing Hero Section */}
-           <div className="relative min-h-[50vh] lg:min-h-[60vh] flex items-center justify-center p-8 text-center text-white mb-20 overflow-hidden">
-              {/* Animated Background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 animate-gradient-x -z-20"></div>
+           <div className="relative min-h-[90vh] flex items-center justify-center p-6 lg:p-12 text-center text-white mb-20 overflow-hidden selection:bg-indigo-500/50 selection:text-white">
+              {/* Animated Background - Darker & Deeper for better readability */}
+              <div className="absolute inset-0 bg-slate-950">
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 animate-gradient-x opacity-90"></div>
+                  {/* Subtle radial glow to center attention */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.15),transparent_70%)]"></div>
+              </div>
               
-              {/* Floating Orbs */}
-              <div className="absolute top-20 left-20 w-72 h-72 bg-indigo-600/30 rounded-full blur-[80px] animate-pulse-slow"></div>
-              <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] animate-float"></div>
+              {/* Floating Orbs - More blurred and subtle */}
+              <div className="absolute top-1/4 -left-20 w-[30rem] h-[30rem] bg-indigo-600/20 rounded-full blur-[120px] animate-float duration-[8000ms]"></div>
+              <div className="absolute bottom-1/4 -right-20 w-[35rem] h-[35rem] bg-purple-600/10 rounded-full blur-[140px] animate-float duration-[10000ms] delay-1000"></div>
               
               {/* Pattern Overlay */}
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay -z-10"></div>
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
 
-              <div className="relative z-10 max-w-4xl flex flex-col items-center animate-fade-in-up">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-8 shadow-lg shadow-purple-500/20">
-                  <Sparkles size={16} className="text-yellow-300" />
-                  <span className="text-sm font-bold tracking-wider text-indigo-100 uppercase">2026 Revised Edition</span>
+              {/* Main Content Container */}
+              <div className="relative z-10 max-w-5xl w-full flex flex-col items-center animate-fade-in-up px-4">
+                
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mb-12 shadow-[0_0_30px_rgba(139,92,246,0.2)] ring-1 ring-white/10 group hover:bg-white/10 transition-all cursor-default select-none">
+                  <Sparkles size={16} className="text-amber-300 animate-pulse" />
+                  <span className="text-sm font-bold tracking-[0.2em] text-indigo-100 uppercase group-hover:text-white transition-colors">2026 Revised Edition</span>
                 </div>
                 
-                <h1 className="text-5xl lg:text-8xl font-black mb-6 tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-indigo-200 drop-shadow-2xl">
+                {/* Main Title - Huge & Clean */}
+                <h1 className="text-5xl md:text-7xl lg:text-[7rem] font-black mb-8 tracking-tighter leading-[0.95] text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-slate-300 drop-shadow-[0_4px_30px_rgba(0,0,0,0.5)] select-none">
                   {BOOK_DATA.title}
                 </h1>
                 
-                <p className="text-lg lg:text-3xl font-light text-slate-300 max-w-2xl leading-relaxed mb-10">
+                {/* Divider Line */}
+                <div className="w-24 h-1.5 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full mb-10 opacity-80"></div>
+                
+                {/* Subtitle - Better Line Height and Contrast */}
+                <p className="text-xl md:text-2xl lg:text-3xl font-medium text-slate-200/90 max-w-4xl leading-relaxed mb-14 drop-shadow-lg break-keep">
                   {BOOK_DATA.subTitle}
                 </p>
                 
-                <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto items-center justify-center">
                   <button 
                     onClick={() => handleNavigate('intro')}
-                    className="group relative px-8 py-4 bg-white text-indigo-950 rounded-full font-bold text-lg hover:shadow-[0_0_20px_rgba(255,255,255,0.5)] transition-all duration-300 overflow-hidden"
+                    className="group relative w-full sm:w-auto px-10 py-5 bg-white text-slate-950 rounded-2xl font-bold text-lg shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)] hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                   >
-                    <span className="relative z-10 flex items-center gap-2">
-                      지금 시작하기 <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    <span className="relative z-10 flex items-center justify-center gap-3">
+                      지금 정독하기 <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </button>
                   <button 
-                    onClick={() => handleNavigate('part-1')}
-                    className="px-8 py-4 bg-white/5 text-white border border-white/20 rounded-full font-semibold text-lg hover:bg-white/10 backdrop-blur-md transition-all flex items-center justify-center gap-2"
+                    onClick={() => handleNavigate('toc-guide')}
+                    className="group w-full sm:w-auto px-10 py-5 bg-white/5 text-white border border-white/10 rounded-2xl font-semibold text-lg hover:bg-white/10 hover:border-white/30 backdrop-blur-md transition-all flex items-center justify-center gap-3"
                   >
-                    <BookOpen size={20} /> 목차 보기
+                    <BookOpen size={20} className="text-indigo-300 group-hover:text-white transition-colors" /> 
+                    목차 전체보기
                   </button>
+                </div>
+
+                {/* Scroll Hint */}
+                <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 animate-bounce opacity-40 hover:opacity-100 transition-opacity cursor-pointer" onClick={() => handleNavigate('intro')}>
+                    <span className="text-xs uppercase tracking-widest text-white/70">Scroll Down</span>
+                    <ChevronDown size={24} className="text-white" />
                 </div>
               </div>
            </div>
@@ -195,7 +218,7 @@ const App: React.FC = () => {
 
                {/* Table of Contents Card (Inserted after Intro) */}
                {index === 0 && (
-                 <div className="py-12 px-4 md:px-8 lg:px-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                 <div id="toc-guide" className="py-12 px-4 md:px-8 lg:px-12 animate-fade-in-up scroll-mt-32" style={{ animationDelay: '0.2s' }}>
                    <div className="relative bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 lg:p-14 shadow-2xl shadow-indigo-500/10 dark:shadow-none border border-slate-100 dark:border-slate-800 overflow-hidden group">
                      {/* Decorative Background Blob */}
                      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-indigo-500/5 to-transparent rounded-full blur-3xl -z-10 group-hover:bg-indigo-500/10 transition-colors duration-700"></div>
