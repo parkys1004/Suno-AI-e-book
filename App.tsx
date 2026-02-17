@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X, ArrowUp, ChevronRight, BookOpen, Sparkles, ChevronDown, ShoppingBag } from 'lucide-react';
+import { Menu, X, ArrowUp, ChevronRight, BookOpen, Sparkles, ChevronDown, ShoppingBag, Crown } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { ChapterView } from './components/ChapterView';
 import { BOOK_DATA } from './constants';
@@ -282,18 +282,43 @@ const App: React.FC = () => {
                            </button>
 
                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                              {BOOK_DATA.appendix.content.map((sub, idx) => (
-                                <button
-                                  key={sub.id || idx}
-                                  onClick={() => handleNavigate(sub.id || BOOK_DATA.appendix.id)}
-                                  className="text-left py-3 px-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 hover:bg-amber-100 dark:hover:bg-amber-900/20 border border-amber-100/50 dark:border-amber-900/30 flex items-center group/item transition-all duration-300"
-                                >
-                                  <div className="w-2 h-2 rounded-full bg-amber-400 group-hover/item:bg-amber-500 mr-3 shadow-[0_0_8px_rgba(251,191,36,0.5)] transition-colors"></div>
-                                  <span className="text-slate-700 dark:text-slate-300 text-sm font-semibold group-hover/item:text-slate-900 dark:group-hover/item:text-white">
-                                    {sub.title}
-                                  </span>
-                                </button>
-                              ))}
+                              {BOOK_DATA.appendix.content.map((sub, idx) => {
+                                const isDeluxe = sub.title.includes("DELUXE");
+                                if (isDeluxe) {
+                                  return (
+                                    <button
+                                      key={sub.id || idx}
+                                      onClick={() => handleNavigate(sub.id || BOOK_DATA.appendix.id)}
+                                      className="col-span-1 sm:col-span-2 lg:col-span-3 text-left py-4 px-5 rounded-2xl bg-gradient-to-r from-amber-100 via-yellow-50 to-white dark:from-amber-900/40 dark:via-yellow-900/20 dark:to-slate-900/50 hover:from-amber-200 hover:via-yellow-100 hover:to-white dark:hover:from-amber-900/60 border border-amber-300 dark:border-amber-700 shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20 flex items-center group/item transition-all duration-300 hover:scale-[1.01] relative overflow-hidden"
+                                    >
+                                      {/* Decorative */}
+                                      <div className="absolute top-0 right-0 p-3 opacity-10 group-hover/item:opacity-20 transition-opacity">
+                                          <Crown size={40} className="text-amber-600 dark:text-amber-400" />
+                                      </div>
+
+                                      <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center mr-4 shadow-md text-white flex-shrink-0">
+                                         <Crown size={16} fill="currentColor" />
+                                      </div>
+                                      <span className="text-amber-900 dark:text-amber-100 text-base font-bold group-hover/item:text-amber-950 dark:group-hover/item:text-white relative z-10 break-keep">
+                                        {sub.title}
+                                      </span>
+                                      <span className="hidden sm:inline-block ml-auto text-xs font-black bg-amber-500 text-white px-2 py-1 rounded shadow-sm flex-shrink-0">PREMIUM</span>
+                                    </button>
+                                  );
+                                }
+                                return (
+                                  <button
+                                    key={sub.id || idx}
+                                    onClick={() => handleNavigate(sub.id || BOOK_DATA.appendix.id)}
+                                    className="text-left py-3 px-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 hover:bg-amber-100 dark:hover:bg-amber-900/20 border border-amber-100/50 dark:border-amber-900/30 flex items-center group/item transition-all duration-300"
+                                  >
+                                    <div className="w-2 h-2 rounded-full bg-amber-400 group-hover/item:bg-amber-500 mr-3 shadow-[0_0_8px_rgba(251,191,36,0.5)] transition-colors flex-shrink-0"></div>
+                                    <span className="text-slate-700 dark:text-slate-300 text-sm font-semibold group-hover/item:text-slate-900 dark:group-hover/item:text-white">
+                                      {sub.title}
+                                    </span>
+                                  </button>
+                                );
+                              })}
                            </div>
                        </div>
                      </div>

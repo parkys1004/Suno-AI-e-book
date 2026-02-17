@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Chapter } from '../types';
-import { PlayCircle, CheckCircle2, Music4, Copy, Check, Terminal, Square, CheckSquare } from 'lucide-react';
+import { PlayCircle, CheckCircle2, Music4, Copy, Check, Terminal, Square, CheckSquare, Gift, Sparkles, Star, Crown } from 'lucide-react';
 
 interface ChapterViewProps {
   chapter: Chapter;
@@ -275,62 +275,96 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
 
       {/* Chapter Content Sections */}
       <div className="space-y-16">
-        {chapter.content.map((section, idx) => (
-          <div key={idx} id={section.id} className="group scroll-mt-32">
-            
-            <div className="flex items-start gap-4 mb-8">
-                <div className="hidden lg:flex flex-col items-center gap-1 mt-1">
-                    <div className="w-2.5 h-2.5 rounded-full bg-indigo-600 dark:bg-indigo-500 shadow-[0_0_10px_rgba(79,70,229,0.5)]"></div>
-                    <div className="w-px h-full bg-gradient-to-b from-indigo-500/50 to-transparent min-h-[50px]"></div>
-                </div>
-                <h3 className="text-2xl lg:text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
-                    {section.title}
-                </h3>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-10 pl-0 lg:pl-6">
-              {section.items.map((item, i) => (
-                <div key={i} className="relative bg-white dark:bg-slate-900/50 p-6 md:p-10 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/5 dark:hover:shadow-none transition-all duration-500 group/card">
-                  
-                  {/* Background Hover Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-transparent dark:from-indigo-900/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 rounded-3xl -z-10"></div>
+        {chapter.content.map((section, idx) => {
+          // Check for special "Deluxe" section to style differently
+          const isDeluxe = section.title.includes("DELUXE") || section.title.includes("혜택");
 
-                  {/* Decorative Icons */}
-                  {(item.includes("Free Plan") || item.includes("Pro Plan")) && (
-                    <div className="absolute top-8 right-8 text-emerald-500 dark:text-emerald-400 opacity-20 hidden lg:block transform group-hover/card:scale-110 transition-transform duration-500">
-                      <CheckCircle2 size={48} />
-                    </div>
-                  )}
-                  {(item.includes("GMIV") || item.includes("Mumble")) && (
-                    <div className="absolute top-8 right-8 text-indigo-500 dark:text-indigo-400 opacity-20 hidden lg:block transform group-hover/card:scale-110 transition-transform duration-500">
-                      <Music4 size={48} />
-                    </div>
-                  )}
-
-                  {/* Main Text Content */}
-                  <div>
-                    {renderContent(item, `${section.id}-${i}`)}
+          return (
+            <div key={idx} id={section.id} className="group scroll-mt-32">
+              
+              <div className="flex items-start gap-4 mb-8">
+                  <div className="hidden lg:flex flex-col items-center gap-1 mt-1">
+                      <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(79,70,229,0.5)] ${isDeluxe ? 'bg-amber-500 shadow-amber-500/50 scale-125 ring-2 ring-amber-200 dark:ring-amber-900' : 'bg-indigo-600 dark:bg-indigo-500'}`}></div>
+                      <div className={`w-px h-full min-h-[50px] bg-gradient-to-b to-transparent ${isDeluxe ? 'from-amber-500/50' : 'from-indigo-500/50'}`}></div>
                   </div>
+                  <h3 className={`text-2xl lg:text-3xl font-black tracking-tight flex items-center gap-3 ${isDeluxe ? 'text-amber-600 dark:text-amber-400' : 'text-slate-800 dark:text-slate-100'}`}>
+                      {section.title}
+                      {isDeluxe && <Crown className="text-amber-500 animate-pulse" size={28} />}
+                  </h3>
+              </div>
+              
+              <div className="grid grid-cols-1 gap-10 pl-0 lg:pl-6">
+                {section.items.map((item, i) => (
+                  <div key={i} className={`relative p-6 md:p-10 rounded-3xl border transition-all duration-500 group/card overflow-hidden ${
+                    isDeluxe 
+                      ? 'bg-gradient-to-br from-yellow-50 via-amber-50 to-white dark:from-yellow-950/30 dark:via-amber-900/20 dark:to-slate-900/50 border-amber-300 dark:border-amber-600/50 ring-2 ring-amber-100 dark:ring-amber-900/30 shadow-xl shadow-amber-200/50 dark:shadow-amber-900/30 hover:shadow-amber-300/60 dark:hover:shadow-amber-900/50 hover:scale-[1.01]' 
+                      : 'bg-white dark:bg-slate-900/50 border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/5 dark:hover:shadow-none'
+                  }`}>
+                    
+                    {/* Background Hover Effect */}
+                    <div className={`absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 rounded-3xl -z-10 ${
+                       isDeluxe ? 'bg-gradient-to-br from-amber-100/50 to-transparent' : 'bg-gradient-to-br from-indigo-50/50 to-transparent dark:from-indigo-900/10'
+                    }`}></div>
 
-                  {/* Visual enhancement for 'Practical Tip' */}
-                  {item.includes('예시:') && (
-                    <div className="mt-8 p-6 bg-indigo-50/80 dark:bg-indigo-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col sm:flex-row items-start gap-5 backdrop-blur-sm">
-                      <div className="p-3 bg-white dark:bg-indigo-900 rounded-full shadow-md text-indigo-600 dark:text-indigo-300">
-                        <PlayCircle size={24} fill="currentColor" className="text-white dark:text-indigo-900" />
+                    {/* Decorative Icons for Deluxe */}
+                    {isDeluxe && (
+                        <>
+                            {/* Shiny Glare */}
+                            <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-400/20 blur-[80px] rounded-full pointer-events-none group-hover/card:bg-amber-400/30 transition-colors"></div>
+                            
+                            {/* Floating Icons */}
+                            <div className="absolute top-6 right-6 text-amber-500/30 hidden lg:block transform group-hover/card:scale-110 group-hover/card:rotate-12 transition-all duration-700 ease-out pointer-events-none">
+                                {i === 0 ? <Crown size={64} strokeWidth={1} /> : <Gift size={64} strokeWidth={1} />}
+                            </div>
+                            
+                            {/* Sparkles */}
+                            <div className="absolute bottom-10 right-10 text-yellow-400 opacity-0 group-hover/card:opacity-100 transition-opacity duration-700 pointer-events-none">
+                                <Sparkles className="animate-pulse" size={24} />
+                            </div>
+                            
+                             {/* Special Badge for Benefit Cards */}
+                            <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-br-2xl shadow-lg z-10">
+                                {i === 0 ? 'Premium Access' : `Benefit 0${i}`}
+                            </div>
+                        </>
+                    )}
+
+                    {!isDeluxe && (item.includes("Free Plan") || item.includes("Pro Plan")) && (
+                      <div className="absolute top-8 right-8 text-emerald-500 dark:text-emerald-400 opacity-20 hidden lg:block transform group-hover/card:scale-110 transition-transform duration-500">
+                        <CheckCircle2 size={48} />
                       </div>
-                      <div>
-                         <span className="text-xs font-black uppercase tracking-widest text-indigo-500 dark:text-indigo-400 block mb-2">Practical Tip</span>
-                         <p className="text-base font-medium text-indigo-900 dark:text-indigo-100 opacity-90 leading-relaxed whitespace-pre-line">
-                            이 예시는 수익화 과정에서 빈번하게 마주치는 상황입니다. 반드시 메모해두세요.
-                         </p>
+                    )}
+                    {!isDeluxe && (item.includes("GMIV") || item.includes("Mumble")) && (
+                      <div className="absolute top-8 right-8 text-indigo-500 dark:text-indigo-400 opacity-20 hidden lg:block transform group-hover/card:scale-110 transition-transform duration-500">
+                        <Music4 size={48} />
                       </div>
+                    )}
+
+                    {/* Main Text Content */}
+                    <div className="relative z-10">
+                      {renderContent(item, `${section.id}-${i}`)}
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    {/* Visual enhancement for 'Practical Tip' */}
+                    {item.includes('예시:') && (
+                      <div className="mt-8 p-6 bg-indigo-50/80 dark:bg-indigo-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col sm:flex-row items-start gap-5 backdrop-blur-sm">
+                        <div className="p-3 bg-white dark:bg-indigo-900 rounded-full shadow-md text-indigo-600 dark:text-indigo-300">
+                          <PlayCircle size={24} fill="currentColor" className="text-white dark:text-indigo-900" />
+                        </div>
+                        <div>
+                           <span className="text-xs font-black uppercase tracking-widest text-indigo-500 dark:text-indigo-400 block mb-2">Practical Tip</span>
+                           <p className="text-base font-medium text-indigo-900 dark:text-indigo-100 opacity-90 leading-relaxed whitespace-pre-line">
+                              이 예시는 수익화 과정에서 빈번하게 마주치는 상황입니다. 반드시 메모해두세요.
+                           </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

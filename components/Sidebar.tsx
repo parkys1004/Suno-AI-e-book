@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lightbulb, Moon, Sun, Music, Book, Disc, ShoppingBag } from 'lucide-react';
+import { Lightbulb, Moon, Sun, Music, Book, Disc, ShoppingBag, Crown, Sparkles } from 'lucide-react';
 import { BOOK_DATA } from '../constants';
 
 interface SidebarProps {
@@ -134,6 +134,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
              <div className="pl-2 space-y-1">
               {BOOK_DATA.appendix.content.map((subItem) => {
                  const isActive = activeId === (subItem.id || BOOK_DATA.appendix.id);
+                 const isDeluxe = subItem.title.includes("DELUXE");
+
+                 if (isDeluxe) {
+                    return (
+                        <button
+                            key={subItem.id || subItem.title}
+                            onClick={() => handleNavClick(subItem.id || BOOK_DATA.appendix.id)}
+                            className={`w-full text-left py-3 px-4 mt-3 rounded-xl flex items-center text-xs font-bold transition-all duration-300 border relative overflow-hidden group shadow-md ${
+                            isActive
+                                ? 'bg-gradient-to-r from-amber-100 to-yellow-50 dark:from-amber-900/40 dark:to-yellow-900/20 border-amber-300 dark:border-amber-600 text-amber-900 dark:text-amber-200 shadow-amber-500/20'
+                                : 'bg-gradient-to-r from-amber-50 to-white dark:from-amber-950/30 dark:to-slate-900 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-400 hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-amber-500/10'
+                            }`}
+                        >
+                             {/* Shine Effect */}
+                             <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-white/10 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out`}></div>
+                            
+                            <Crown size={14} className={`mr-2 flex-shrink-0 ${isActive ? 'text-amber-600 dark:text-amber-400 animate-pulse' : 'text-amber-500'}`} fill={isActive ? "currentColor" : "none"} />
+                            <span className="relative z-10 break-keep leading-tight">{subItem.title}</span>
+                        </button>
+                    )
+                 }
+
                  return (
                   <button
                     key={subItem.id || subItem.title}
