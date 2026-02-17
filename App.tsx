@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X, ArrowUp, ChevronRight } from 'lucide-react';
+import { Menu, X, ArrowUp, ChevronRight, BookOpen, Sparkles } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { ChapterView } from './components/ChapterView';
 import { BOOK_DATA } from './constants';
@@ -41,11 +41,11 @@ const App: React.FC = () => {
   const handleNavigate = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      // Adjust scroll position to account for sticky header on mobile or padding
-      const offset = 80;
+      // Offset for sticky header/padding
+      const offset = 100;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-  
+      
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
@@ -60,7 +60,7 @@ const App: React.FC = () => {
     const progress = (window.scrollY / totalHeight) * 100;
     setReadingProgress(progress);
 
-    const scrollPosition = window.scrollY + 150; // Offset
+    const scrollPosition = window.scrollY + 150; 
     
     // Check main chapters
     for (const chapter of BOOK_DATA.chapters) {
@@ -94,11 +94,12 @@ const App: React.FC = () => {
   }, [handleScroll]);
 
   return (
-    <div className="flex bg-white dark:bg-slate-900 min-h-screen transition-colors duration-300 font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen transition-colors duration-500 overflow-x-hidden">
+      
       {/* Reading Progress Bar (Fixed Top) */}
-      <div className="fixed top-0 left-0 w-full h-1 z-50 bg-transparent">
+      <div className="fixed top-0 left-0 w-full h-1.5 z-50 bg-transparent">
         <div 
-          className="h-full bg-indigo-600 dark:bg-indigo-400 transition-all duration-150 ease-out"
+          className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-[0_0_10px_rgba(168,85,247,0.5)] transition-all duration-150 ease-out rounded-r-full"
           style={{ width: `${readingProgress}%` }}
         />
       </div>
@@ -106,7 +107,7 @@ const App: React.FC = () => {
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -122,99 +123,119 @@ const App: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 w-full lg:w-auto bg-slate-50/50 dark:bg-slate-950">
+      <div className="w-full lg:pl-80 relative transition-all duration-300">
+        
         {/* Mobile Header */}
-        <div className="sticky top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between lg:hidden transition-colors">
-          <span className="font-bold text-slate-800 dark:text-slate-100 text-sm truncate pr-4">
-             {BOOK_DATA.title}
-          </span>
+        <div className="sticky top-0 z-20 glass-panel border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between lg:hidden transition-all duration-300">
+          <div className="flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">S</span>
+            <span className="font-bold text-slate-800 dark:text-slate-100 text-sm truncate">
+               {BOOK_DATA.title}
+            </span>
+          </div>
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
           >
             {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
-        {/* Content Wrapper */}
         <main className="max-w-5xl mx-auto pb-32">
-           {/* Cover / Hero Section */}
-           <div className="relative overflow-hidden h-[28rem] lg:h-[34rem] bg-gradient-to-br from-indigo-900 via-slate-900 to-black flex items-center justify-center p-8 text-center text-white mb-12 lg:rounded-b-[4rem] shadow-2xl shadow-indigo-900/20">
-              {/* Background Glow Effects */}
-              <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/30 rounded-full blur-[100px] animate-pulse"></div>
-              <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px]"></div>
+           {/* Amazing Hero Section */}
+           <div className="relative min-h-[50vh] lg:min-h-[60vh] flex items-center justify-center p-8 text-center text-white mb-20 overflow-hidden">
+              {/* Animated Background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 animate-gradient-x -z-20"></div>
               
-              <div className="relative max-w-4xl z-10 flex flex-col items-center">
-                <span className="inline-block py-1 px-3 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-200 text-xs font-bold tracking-widest uppercase mb-6 backdrop-blur-md">
-                  2026 Revised Edition
-                </span>
-                <h1 className="text-4xl lg:text-7xl font-black mb-6 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-slate-400 drop-shadow-sm">
+              {/* Floating Orbs */}
+              <div className="absolute top-20 left-20 w-72 h-72 bg-indigo-600/30 rounded-full blur-[80px] animate-pulse-slow"></div>
+              <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] animate-float"></div>
+              
+              {/* Pattern Overlay */}
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay -z-10"></div>
+
+              <div className="relative z-10 max-w-4xl flex flex-col items-center animate-fade-in-up">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-8 shadow-lg shadow-purple-500/20">
+                  <Sparkles size={16} className="text-yellow-300" />
+                  <span className="text-sm font-bold tracking-wider text-indigo-100 uppercase">2026 Revised Edition</span>
+                </div>
+                
+                <h1 className="text-5xl lg:text-8xl font-black mb-6 tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-indigo-200 drop-shadow-2xl">
                   {BOOK_DATA.title}
                 </h1>
-                <p className="text-lg lg:text-2xl font-light text-slate-300 max-w-2xl leading-relaxed">
+                
+                <p className="text-lg lg:text-3xl font-light text-slate-300 max-w-2xl leading-relaxed mb-10">
                   {BOOK_DATA.subTitle}
                 </p>
-                <div className="mt-10 flex flex-col sm:flex-row gap-4">
+                
+                <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
                   <button 
                     onClick={() => handleNavigate('intro')}
-                    className="px-8 py-3.5 bg-white text-indigo-950 rounded-full font-bold text-base hover:bg-indigo-50 transition-colors shadow-lg shadow-white/10"
+                    className="group relative px-8 py-4 bg-white text-indigo-950 rounded-full font-bold text-lg hover:shadow-[0_0_20px_rgba(255,255,255,0.5)] transition-all duration-300 overflow-hidden"
                   >
-                    지금 읽기 시작
+                    <span className="relative z-10 flex items-center gap-2">
+                      지금 시작하기 <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </button>
                   <button 
                     onClick={() => handleNavigate('part-1')}
-                    className="px-8 py-3.5 bg-indigo-600/30 text-white border border-indigo-400/30 rounded-full font-semibold text-base hover:bg-indigo-600/50 backdrop-blur-sm transition-all"
+                    className="px-8 py-4 bg-white/5 text-white border border-white/20 rounded-full font-semibold text-lg hover:bg-white/10 backdrop-blur-md transition-all flex items-center justify-center gap-2"
                   >
-                    목차 보기
+                    <BookOpen size={20} /> 목차 보기
                   </button>
                 </div>
               </div>
            </div>
 
-           {/* Render Chapters with TOC inserted after Intro */}
+           {/* Render Chapters with Interactive TOC */}
            {BOOK_DATA.chapters.map((chapter, index) => (
              <React.Fragment key={chapter.id}>
                <ChapterView chapter={chapter} />
 
-               {/* Insert TOC (Table of Contents) Card */}
+               {/* Table of Contents Card (Inserted after Intro) */}
                {index === 0 && (
-                 <div className="py-12 px-4 md:px-8 lg:px-12">
-                   <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 lg:p-12 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 transition-all transform hover:scale-[1.005] duration-500">
-                     <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-10 flex items-center gap-3">
-                       <span>📚</span> 
-                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400">
-                         목차
+                 <div className="py-12 px-4 md:px-8 lg:px-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                   <div className="relative bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 lg:p-14 shadow-2xl shadow-indigo-500/10 dark:shadow-none border border-slate-100 dark:border-slate-800 overflow-hidden group">
+                     {/* Decorative Background Blob */}
+                     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-indigo-500/5 to-transparent rounded-full blur-3xl -z-10 group-hover:bg-indigo-500/10 transition-colors duration-700"></div>
+
+                     <h2 className="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white mb-12 flex items-center gap-4">
+                       <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-900/50 text-2xl shadow-inner">📚</span> 
+                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+                         목차 가이드
                        </span> 
-                       <span className="text-sm font-medium text-slate-400 dark:text-slate-500 ml-auto tracking-wide uppercase">Table of Contents</span>
                      </h2>
                      
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
-                       {BOOK_DATA.chapters.slice(1).map((c) => ( // Skip intro for TOC
-                         <div key={c.id} className="space-y-4">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                       {BOOK_DATA.chapters.slice(1).map((c) => (
+                         <div key={c.id} className="space-y-5">
                            <button 
                              onClick={() => handleNavigate(c.id)}
-                             className="text-left w-full group"
+                             className="text-left w-full group/title"
                            >
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Part {c.title.split('부')[0]}</span>
-                                <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800 transition-colors"></div>
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className="text-xs font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-widest px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-900/30">
+                                  Part {c.title.split('부')[0]}
+                                </span>
+                                <div className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent dark:from-slate-800"></div>
                               </div>
-                              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors">
+                              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 group-hover/title:text-indigo-600 dark:group-hover/title:text-indigo-400 transition-colors duration-300">
                                 {c.title.split(':')[1]?.trim() || c.title}
                               </h3>
                            </button>
 
-                           <div className="space-y-1">
+                           <div className="space-y-2">
                               {c.content.map((sub, idx) => (
                                 <button
                                   key={sub.id || idx}
                                   onClick={() => handleNavigate(sub.id || c.id)}
-                                  className="w-full text-left py-2 px-3 -ml-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 flex items-center group/item transition-all"
+                                  className="w-full text-left py-3 px-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 border border-transparent hover:border-indigo-100 dark:hover:border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center justify-between group/item transition-all duration-300"
                                 >
-                                  <ChevronRight size={14} className="text-slate-300 dark:text-slate-600 mr-2 group-hover/item:text-indigo-500 transition-colors" />
-                                  <span className="text-slate-600 dark:text-slate-400 text-sm font-medium group-hover/item:text-slate-900 dark:group-hover/item:text-slate-200 leading-relaxed truncate">
+                                  <span className="text-slate-600 dark:text-slate-400 text-sm font-medium group-hover/item:text-slate-900 dark:group-hover/item:text-slate-200 truncate pr-4">
                                     {sub.title}
                                   </span>
+                                  <ChevronRight size={16} className="text-slate-300 dark:text-slate-600 group-hover/item:text-indigo-500 transition-colors" />
                                 </button>
                               ))}
                            </div>
@@ -222,29 +243,30 @@ const App: React.FC = () => {
                        ))}
                        
                        {/* Appendix Column */}
-                       <div className="space-y-4 md:col-span-2 pt-6 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
+                       <div className="md:col-span-2 pt-8 mt-4 border-t border-dashed border-slate-200 dark:border-slate-800">
                            <button 
                              onClick={() => handleNavigate(BOOK_DATA.appendix.id)}
-                             className="text-left w-full group"
+                             className="text-left w-full group/bonus mb-6"
                            >
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wider">Bonus</span>
-                                <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800 group-hover:bg-amber-200 dark:group-hover:bg-amber-800 transition-colors"></div>
+                                <span className="text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wider flex items-center gap-1">
+                                  <Sparkles size={12} /> Bonus Track
+                                </span>
                               </div>
-                              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
+                              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200 group-hover/bonus:text-amber-600 dark:group-hover/bonus:text-amber-400 transition-colors">
                                 {BOOK_DATA.appendix.title}
                               </h3>
                            </button>
 
-                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                               {BOOK_DATA.appendix.content.map((sub, idx) => (
                                 <button
                                   key={sub.id || idx}
                                   onClick={() => handleNavigate(sub.id || BOOK_DATA.appendix.id)}
-                                  className="w-full text-left py-2 px-3 -ml-3 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/10 flex items-center group/item transition-all"
+                                  className="text-left py-3 px-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 hover:bg-amber-100 dark:hover:bg-amber-900/20 border border-amber-100/50 dark:border-amber-900/30 flex items-center group/item transition-all duration-300"
                                 >
-                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-300 dark:bg-amber-600 group-hover/item:bg-amber-500 mr-3 transition-colors" />
-                                  <span className="text-slate-600 dark:text-slate-400 text-sm font-medium group-hover/item:text-slate-900 dark:group-hover/item:text-slate-200 leading-relaxed">
+                                  <div className="w-2 h-2 rounded-full bg-amber-400 group-hover/item:bg-amber-500 mr-3 shadow-[0_0_8px_rgba(251,191,36,0.5)] transition-colors"></div>
+                                  <span className="text-slate-700 dark:text-slate-300 text-sm font-semibold group-hover/item:text-slate-900 dark:group-hover/item:text-white">
                                     {sub.title}
                                   </span>
                                 </button>
@@ -252,7 +274,6 @@ const App: React.FC = () => {
                            </div>
                        </div>
                      </div>
-
                    </div>
                  </div>
                )}
@@ -267,12 +288,12 @@ const App: React.FC = () => {
       {/* Scroll to Top Button */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-8 right-8 p-3.5 rounded-full bg-indigo-600 dark:bg-indigo-500 text-white shadow-xl hover:shadow-2xl hover:bg-indigo-700 dark:hover:bg-indigo-600 hover:-translate-y-1 transition-all duration-300 z-50 ${
+        className={`fixed bottom-8 right-8 p-4 rounded-full bg-indigo-600 dark:bg-indigo-500 text-white shadow-lg shadow-indigo-500/40 hover:shadow-indigo-600/50 hover:bg-indigo-700 dark:hover:bg-indigo-600 hover:-translate-y-1 transition-all duration-300 z-50 ${
           showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
         }`}
         aria-label="Scroll to top"
       >
-        <ArrowUp size={24} strokeWidth={2.5} />
+        <ArrowUp size={24} strokeWidth={3} />
       </button>
     </div>
   );
