@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X, ArrowUp, ChevronRight, BookOpen, Sparkles, ChevronDown } from 'lucide-react';
+import { Menu, X, ArrowUp, ChevronRight, BookOpen, Sparkles, ChevronDown, ShoppingBag } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { ChapterView } from './components/ChapterView';
 import { BOOK_DATA } from './constants';
@@ -307,6 +307,18 @@ const App: React.FC = () => {
            <ChapterView chapter={BOOK_DATA.appendix} isAppendix />
         </main>
       </div>
+
+      {/* Floating Kmong Button (Mobile Only) */}
+      <a
+        href="https://kmong.com/self-marketing/730531/ZQh4nXZpK5"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-8 left-6 lg:hidden z-50 flex items-center gap-2 px-5 py-3 bg-[#ffd400] text-slate-900 rounded-full font-bold shadow-xl shadow-yellow-400/30 hover:scale-105 transition-transform duration-300"
+        aria-label="크몽 전자책 구매"
+      >
+        <ShoppingBag size={20} className="text-slate-900" />
+        <span className="text-sm">전자책 구매</span>
+      </a>
 
       {/* Scroll to Top Button */}
       <button
