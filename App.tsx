@@ -333,22 +333,28 @@ const App: React.FC = () => {
         </main>
       </div>
 
-      {/* Floating Kmong Button (Mobile Only) */}
-      <a
-        href="https://kmong.com/self-marketing/730531/ZQh4nXZpK5"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-8 left-6 lg:hidden z-50 flex items-center gap-2 px-5 py-3 bg-[#ffd400] text-slate-900 rounded-full font-bold shadow-xl shadow-yellow-400/30 hover:scale-105 transition-transform duration-300"
-        aria-label="크몽 전자책 구매"
-      >
-        <ShoppingBag size={20} className="text-slate-900" />
-        <span className="text-sm">전자책 구매</span>
-      </a>
+      {/* Fixed Kmong Purchase Button (Mobile/Tablet Only) */}
+      <div className="fixed bottom-0 left-0 w-full p-4 pb-8 lg:hidden z-50 pointer-events-none">
+        <div className="max-w-md mx-auto pointer-events-auto">
+          <a
+            href="https://kmong.com/self-marketing/730531/ZQh4nXZpK5"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-[#ffd400] text-slate-900 font-black shadow-[0_10px_40px_rgba(255,212,0,0.4)] hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group"
+          >
+            {/* Shimmer Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out"></div>
+            
+            <ShoppingBag size={22} className="text-slate-900" />
+            <span className="text-base tracking-tight">크몽에서 전자책 구매하기</span>
+          </a>
+        </div>
+      </div>
 
       {/* Scroll to Top Button */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-8 right-8 p-4 rounded-full bg-indigo-600 dark:bg-indigo-500 text-white shadow-lg shadow-indigo-500/40 hover:shadow-indigo-600/50 hover:bg-indigo-700 dark:hover:bg-indigo-600 hover:-translate-y-1 transition-all duration-300 z-50 ${
+        className={`fixed bottom-24 right-6 p-4 rounded-full bg-indigo-600 dark:bg-indigo-500 text-white shadow-lg shadow-indigo-500/40 hover:shadow-indigo-600/50 hover:bg-indigo-700 dark:hover:bg-indigo-600 hover:-translate-y-1 transition-all duration-300 z-50 lg:bottom-8 ${
           showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
         }`}
         aria-label="Scroll to top"

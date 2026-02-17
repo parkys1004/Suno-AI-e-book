@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Chapter } from '../types';
-import { PlayCircle, CheckCircle2, Music4, Copy, Check, Terminal, Square, CheckSquare, Gift, Sparkles, Star, Crown } from 'lucide-react';
+import { PlayCircle, CheckCircle2, Music4, Copy, Check, Terminal, Square, CheckSquare, Gift, Sparkles, Star, Crown, ChevronDown } from 'lucide-react';
 
 interface ChapterViewProps {
   chapter: Chapter;
@@ -162,7 +162,7 @@ const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = 
                  </div>
               </div>
               
-              <span className={`text-[15px] leading-relaxed transition-all duration-300 ${
+              <span className={`text-[15px] leading-relaxed transition-all duration-300 text-left ${
                 isChecked 
                   ? 'text-slate-400 dark:text-slate-500 line-through decoration-slate-300 dark:decoration-slate-600' 
                   : 'text-slate-700 dark:text-slate-300'
@@ -176,7 +176,7 @@ const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = 
         // Header / Section Title within checklist
         if (trimmed.startsWith('✅')) {
              return (
-                 <h4 key={idx} className="mt-10 mb-5 text-lg font-black text-slate-800 dark:text-slate-200 flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border-l-4 border-indigo-500">
+                 <h4 key={idx} className="mt-10 mb-5 text-lg font-black text-slate-800 dark:text-slate-200 flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border-l-4 border-indigo-500 text-left">
                      {renderInlineText(line)}
                  </h4>
              )
@@ -187,7 +187,7 @@ const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = 
             return (
                 <div key={idx} className="flex gap-3 mb-2 pl-2">
                     <span className="text-indigo-400 mt-1.5">•</span>
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-left">
                         {renderInlineText(line.substring(2))}
                     </p>
                 </div>
@@ -199,7 +199,7 @@ const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = 
 
         // Default text
         return (
-          <p key={idx} className="mb-2 leading-relaxed text-slate-600 dark:text-slate-400 text-sm">
+          <p key={idx} className="mb-2 leading-relaxed text-slate-600 dark:text-slate-400 text-sm text-left">
              {renderInlineText(line)}
           </p>
         );
@@ -208,13 +208,59 @@ const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = 
   );
 };
 
+// Deluxe Accordion Item Component
+const DeluxeAccordionItem: React.FC<{ item: string; index: number; renderContent: (text: string) => React.ReactNode }> = ({ item, index, renderContent }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Parse Title and Content
+  // Assuming format: "Title\n\nContent" or just "Content"
+  const splitIndex = item.indexOf('\n\n');
+  const titleText = splitIndex !== -1 ? item.substring(0, splitIndex) : item;
+  const contentText = splitIndex !== -1 ? item.substring(splitIndex + 2) : "";
+
+  return (
+    <div className="mb-4 rounded-2xl overflow-hidden border border-amber-200 dark:border-amber-800 shadow-md hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-300 bg-white dark:bg-slate-900 group">
+       <button 
+         onClick={() => setIsOpen(!isOpen)}
+         className={`w-full text-left p-5 flex items-center justify-between transition-colors duration-300 ${
+            isOpen 
+             ? 'bg-gradient-to-r from-amber-100 via-yellow-50 to-white dark:from-amber-900/40 dark:via-yellow-900/20 dark:to-slate-900' 
+             : 'bg-white hover:bg-amber-50 dark:bg-slate-900 dark:hover:bg-amber-900/10'
+         }`}
+       >
+          <div className="flex items-center gap-3 pr-4">
+             {/* Number Badge */}
+             <span className={`flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold border flex-shrink-0 transition-colors ${
+                 isOpen ? 'bg-amber-500 border-amber-500 text-white' : 'bg-amber-100 dark:bg-amber-900/50 border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 group-hover:border-amber-400'
+             }`}>
+                {index + 1}
+             </span>
+             <h4 className={`text-base font-bold leading-tight text-left ${isOpen ? 'text-amber-900 dark:text-amber-100' : 'text-slate-700 dark:text-slate-200 group-hover:text-amber-800 dark:group-hover:text-amber-300'}`}>
+                {renderInlineText(titleText)}
+             </h4>
+          </div>
+          <ChevronDown 
+            className={`flex-shrink-0 text-amber-500 dark:text-amber-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`} 
+            size={20} 
+          />
+       </button>
+       
+       <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
+         <div className="p-6 pt-2 bg-slate-50/50 dark:bg-slate-900/50 border-t border-amber-100 dark:border-amber-900/30">
+            {renderContent(contentText)}
+         </div>
+       </div>
+    </div>
+  )
+}
+
 export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = false }) => {
   
   // Advanced rendering logic to handle text formatting and code blocks
-  const renderContent = (text: string, cardId: string) => {
+  const renderContent = (text: string, cardId?: string) => {
     // Check if this card content is a checklist (heuristic: contains "* [ ]")
     if (text.includes('* [ ]') || text.includes('- [ ]')) {
-        return <InteractiveChecklist content={text} storageKey={`checklist-${cardId}`} />;
+        return <InteractiveChecklist content={text} storageKey={`checklist-${cardId || 'generic'}`} />;
     }
 
     // Regex matches triple backtick code blocks: ``` content ```
@@ -230,13 +276,13 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
 
       // 2. Handle Regular Text (with inline formatting)
       return (
-        <div key={`text-${index}`} className="mb-6 last:mb-0">
+        <div key={`text-${index}`} className="mb-4 last:mb-0">
           {part.split('\n\n').map((paragraph, pIdx) => {
              // Skip empty paragraphs
              if (!paragraph.trim()) return null;
 
              return (
-                <p key={pIdx} className="mb-6 last:mb-0 leading-8 text-lg text-slate-700 dark:text-slate-300 text-justify break-keep whitespace-pre-line">
+                <p key={pIdx} className="mb-6 last:mb-0 leading-8 text-lg text-slate-700 dark:text-slate-300 text-left lg:text-justify break-keep whitespace-pre-line">
                   {renderInlineText(paragraph)}
                 </p>
              )
@@ -263,11 +309,11 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
              </span>
            )}
         </div>
-        <h2 className="text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 tracking-tight mb-6 leading-tight break-keep">
+        <h2 className="text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 tracking-tight mb-6 leading-tight break-keep text-left">
           {chapter.title}
         </h2>
         {chapter.subTitle && (
-          <p className="text-xl lg:text-2xl text-slate-500 dark:text-slate-400 font-light leading-relaxed break-keep border-l-4 border-slate-200 dark:border-slate-700 pl-6">
+          <p className="text-xl lg:text-2xl text-slate-500 dark:text-slate-400 font-light leading-relaxed break-keep border-l-4 border-slate-200 dark:border-slate-700 pl-6 text-left">
             {chapter.subTitle}
           </p>
         )}
@@ -277,77 +323,93 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
       <div className="space-y-16">
         {chapter.content.map((section, idx) => {
           // Check for special "Deluxe" section to style differently
-          const isDeluxe = section.title.includes("DELUXE") || section.title.includes("혜택");
+          const isDeluxe = section.id === "appendix-deluxe";
 
+          if (isDeluxe) {
+            // Special Rendering for DELUXE Section: Intro Banner + Accordion List
+            const [introItem, ...accordionItems] = section.items;
+
+            return (
+                <div key={idx} id={section.id} className="scroll-mt-32">
+                    <div className="flex items-center gap-4 mb-8">
+                         <h3 className="text-2xl lg:text-3xl font-black tracking-tight flex items-center gap-3 text-amber-600 dark:text-amber-400 text-left">
+                             {section.title}
+                             <Crown className="text-amber-500 animate-pulse" size={28} />
+                         </h3>
+                    </div>
+
+                    <div className="pl-0 lg:pl-2">
+                        {/* 1. Intro Banner Card */}
+                        <div className="relative p-8 rounded-3xl bg-gradient-to-br from-amber-100 via-yellow-50 to-white dark:from-amber-950 dark:via-yellow-900/20 dark:to-slate-900 border border-amber-300 dark:border-amber-700 shadow-xl shadow-amber-500/10 mb-10 overflow-hidden group">
+                             {/* Decoration */}
+                             <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/10 blur-[60px] rounded-full pointer-events-none"></div>
+                             <div className="absolute bottom-0 left-0 w-40 h-40 bg-yellow-400/10 blur-[40px] rounded-full pointer-events-none"></div>
+                             <Sparkles className="absolute top-6 right-6 text-amber-400 animate-pulse" size={24} />
+
+                             <div className="relative z-10 text-left">
+                                 <span className="inline-block px-3 py-1 mb-4 rounded-full bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest shadow-md">Premium Access</span>
+                                 <div className="text-lg leading-relaxed text-slate-800 dark:text-slate-200">
+                                     {renderContent(introItem)}
+                                 </div>
+                             </div>
+                        </div>
+
+                        {/* 2. Accordion List */}
+                        <div className="space-y-2">
+                            {accordionItems.map((item, i) => (
+                                <DeluxeAccordionItem 
+                                    key={i} 
+                                    item={item} 
+                                    index={i} 
+                                    renderContent={(t) => renderContent(t, `${section.id}-acc-${i}`)} 
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )
+          }
+
+          // Standard Rendering
           return (
             <div key={idx} id={section.id} className="group scroll-mt-32">
               
               <div className="flex items-start gap-4 mb-8">
                   <div className="hidden lg:flex flex-col items-center gap-1 mt-1">
-                      <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(79,70,229,0.5)] ${isDeluxe ? 'bg-amber-500 shadow-amber-500/50 scale-125 ring-2 ring-amber-200 dark:ring-amber-900' : 'bg-indigo-600 dark:bg-indigo-500'}`}></div>
-                      <div className={`w-px h-full min-h-[50px] bg-gradient-to-b to-transparent ${isDeluxe ? 'from-amber-500/50' : 'from-indigo-500/50'}`}></div>
+                      <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(79,70,229,0.5)] bg-indigo-600 dark:bg-indigo-500`}></div>
+                      <div className={`w-px h-full min-h-[50px] bg-gradient-to-b to-transparent from-indigo-500/50`}></div>
                   </div>
-                  <h3 className={`text-2xl lg:text-3xl font-black tracking-tight flex items-center gap-3 ${isDeluxe ? 'text-amber-600 dark:text-amber-400' : 'text-slate-800 dark:text-slate-100'}`}>
+                  <h3 className={`text-2xl lg:text-3xl font-black tracking-tight flex items-center gap-3 text-slate-800 dark:text-slate-100 text-left`}>
                       {section.title}
-                      {isDeluxe && <Crown className="text-amber-500 animate-pulse" size={28} />}
                   </h3>
               </div>
               
               <div className="grid grid-cols-1 gap-10 pl-0 lg:pl-6">
                 {section.items.map((item, i) => (
-                  <div key={i} className={`relative p-6 md:p-10 rounded-3xl border transition-all duration-500 group/card overflow-hidden ${
-                    isDeluxe 
-                      ? 'bg-gradient-to-br from-yellow-50 via-amber-50 to-white dark:from-yellow-950/30 dark:via-amber-900/20 dark:to-slate-900/50 border-amber-300 dark:border-amber-600/50 ring-2 ring-amber-100 dark:ring-amber-900/30 shadow-xl shadow-amber-200/50 dark:shadow-amber-900/30 hover:shadow-amber-300/60 dark:hover:shadow-amber-900/50 hover:scale-[1.01]' 
-                      : 'bg-white dark:bg-slate-900/50 border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/5 dark:hover:shadow-none'
-                  }`}>
+                  <div key={i} className={`relative p-6 md:p-10 rounded-3xl border transition-all duration-500 group/card overflow-hidden bg-white dark:bg-slate-900/50 border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/5 dark:hover:shadow-none`}>
                     
                     {/* Background Hover Effect */}
-                    <div className={`absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 rounded-3xl -z-10 ${
-                       isDeluxe ? 'bg-gradient-to-br from-amber-100/50 to-transparent' : 'bg-gradient-to-br from-indigo-50/50 to-transparent dark:from-indigo-900/10'
-                    }`}></div>
+                    <div className={`absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 rounded-3xl -z-10 bg-gradient-to-br from-indigo-50/50 to-transparent dark:from-indigo-900/10`}></div>
 
-                    {/* Decorative Icons for Deluxe */}
-                    {isDeluxe && (
-                        <>
-                            {/* Shiny Glare */}
-                            <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-400/20 blur-[80px] rounded-full pointer-events-none group-hover/card:bg-amber-400/30 transition-colors"></div>
-                            
-                            {/* Floating Icons */}
-                            <div className="absolute top-6 right-6 text-amber-500/30 hidden lg:block transform group-hover/card:scale-110 group-hover/card:rotate-12 transition-all duration-700 ease-out pointer-events-none">
-                                {i === 0 ? <Crown size={64} strokeWidth={1} /> : <Gift size={64} strokeWidth={1} />}
-                            </div>
-                            
-                            {/* Sparkles */}
-                            <div className="absolute bottom-10 right-10 text-yellow-400 opacity-0 group-hover/card:opacity-100 transition-opacity duration-700 pointer-events-none">
-                                <Sparkles className="animate-pulse" size={24} />
-                            </div>
-                            
-                             {/* Special Badge for Benefit Cards */}
-                            <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-br-2xl shadow-lg z-10">
-                                {i === 0 ? 'Premium Access' : `Benefit 0${i}`}
-                            </div>
-                        </>
-                    )}
-
-                    {!isDeluxe && (item.includes("Free Plan") || item.includes("Pro Plan")) && (
+                    {(item.includes("Free Plan") || item.includes("Pro Plan")) && (
                       <div className="absolute top-8 right-8 text-emerald-500 dark:text-emerald-400 opacity-20 hidden lg:block transform group-hover/card:scale-110 transition-transform duration-500">
                         <CheckCircle2 size={48} />
                       </div>
                     )}
-                    {!isDeluxe && (item.includes("GMIV") || item.includes("Mumble")) && (
+                    {(item.includes("GMIV") || item.includes("Mumble")) && (
                       <div className="absolute top-8 right-8 text-indigo-500 dark:text-indigo-400 opacity-20 hidden lg:block transform group-hover/card:scale-110 transition-transform duration-500">
                         <Music4 size={48} />
                       </div>
                     )}
 
                     {/* Main Text Content */}
-                    <div className="relative z-10">
+                    <div className="relative z-10 text-left">
                       {renderContent(item, `${section.id}-${i}`)}
                     </div>
 
                     {/* Visual enhancement for 'Practical Tip' */}
                     {item.includes('예시:') && (
-                      <div className="mt-8 p-6 bg-indigo-50/80 dark:bg-indigo-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col sm:flex-row items-start gap-5 backdrop-blur-sm">
+                      <div className="mt-8 p-6 bg-indigo-50/80 dark:bg-indigo-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col sm:flex-row items-start gap-5 backdrop-blur-sm text-left">
                         <div className="p-3 bg-white dark:bg-indigo-900 rounded-full shadow-md text-indigo-600 dark:text-indigo-300">
                           <PlayCircle size={24} fill="currentColor" className="text-white dark:text-indigo-900" />
                         </div>
