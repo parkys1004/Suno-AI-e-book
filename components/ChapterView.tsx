@@ -1,11 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Chapter } from '../types';
-import { PlayCircle, CheckCircle2, Music4, Copy, Check, Terminal } from 'lucide-react';
+import { PlayCircle, CheckCircle2, Music4, Copy, Check, Terminal, Square, CheckSquare } from 'lucide-react';
 
 interface ChapterViewProps {
   chapter: Chapter;
   isAppendix?: boolean;
 }
+
+// Helper to render inline formatting (bold, code)
+const renderInlineText = (text: string) => {
+  return text.split(/(\*\*.*?\*\*|`.*?`)/g).map((subPart, subIdx) => {
+    // Bold text (**text**)
+    if (subPart.startsWith('**') && subPart.endsWith('**')) {
+      return (
+        <strong key={subIdx} className="font-extrabold text-slate-800 dark:text-slate-100">
+          {subPart.slice(2, -2)}
+        </strong>
+      );
+    }
+    // Inline code (`text`)
+    if (subPart.startsWith('`') && subPart.endsWith('`')) {
+      return (
+        <code key={subIdx} className="px-1.5 py-0.5 mx-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-pink-600 dark:text-pink-400 font-mono text-sm border border-slate-200 dark:border-slate-700 shadow-sm">
+          {subPart.slice(1, -1)}
+        </code>
+      );
+    }
+    return subPart;
+  });
+};
 
 // Interactive Code Block Component with Copy Functionality
 const CodeBlock: React.FC<{ code: string }> = ({ code }) => {
@@ -60,10 +83,140 @@ const CodeBlock: React.FC<{ code: string }> = ({ code }) => {
   );
 };
 
+// Interactive Checklist Component
+const InteractiveChecklist: React.FC<{ content: string; storageKey: string }> = ({ content, storageKey }) => {
+  const lines = content.split('\n');
+  // Identify checkable lines to maintain state index mapping
+  const checkableIndices = lines.map((line, idx) => 
+    line.trim().startsWith('* [ ]') ? idx : -1
+  ).filter(idx => idx !== -1);
+
+  const [checkedState, setCheckedState] = useState<{ [key: number]: boolean }>({});
+
+  useEffect(() => {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      try {
+        setCheckedState(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse checklist state");
+      }
+    }
+  }, [storageKey]);
+
+  const toggleCheck = (lineIndex: number) => {
+    const newState = { ...checkedState, [lineIndex]: !checkedState[lineIndex] };
+    setCheckedState(newState);
+    localStorage.setItem(storageKey, JSON.stringify(newState));
+  };
+
+  // Calculate progress
+  const totalChecks = checkableIndices.length;
+  const checkedCount = checkableIndices.filter(idx => checkedState[idx]).length;
+  const progress = totalChecks > 0 ? Math.round((checkedCount / totalChecks) * 100) : 0;
+
+  return (
+    <div className="space-y-4">
+      {/* Progress Bar */}
+      {totalChecks > 0 && (
+        <div className="mb-8 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800/50">
+          <div className="flex justify-between items-end mb-2">
+            <span className="text-sm font-bold text-indigo-900 dark:text-indigo-300">Checklist Progress</span>
+            <span className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400">{progress}% ({checkedCount}/{totalChecks})</span>
+          </div>
+          <div className="w-full h-2 bg-indigo-200 dark:bg-indigo-800 rounded-full overflow-hidden">
+             <div 
+               className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500 ease-out"
+               style={{ width: `${progress}%` }}
+             ></div>
+          </div>
+        </div>
+      )}
+
+      {lines.map((line, idx) => {
+        // Checkbox Item
+        if (line.trim().startsWith('* [ ]')) {
+          const text = line.replace(/^\*\s*\[\s*\]\s*/, '');
+          const isChecked = !!checkedState[idx];
+          
+          return (
+            <div 
+              key={idx} 
+              onClick={() => toggleCheck(idx)}
+              className={`flex items-start gap-3 p-3 rounded-lg transition-all cursor-pointer group ${
+                isChecked 
+                  ? 'bg-emerald-50/50 dark:bg-emerald-900/10' 
+                  : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
+              }`}
+            >
+              <button className={`mt-0.5 transition-colors ${isChecked ? 'text-emerald-500' : 'text-slate-300 dark:text-slate-600 group-hover:text-indigo-400'}`}>
+                {isChecked ? <CheckSquare size={20} fill="currentColor" className="text-white dark:text-slate-900" /> : <Square size={20} />}
+              </button>
+              <span className={`text-base leading-relaxed select-none transition-opacity ${
+                isChecked 
+                  ? 'text-slate-400 dark:text-slate-500 line-through decoration-slate-300 dark:decoration-slate-600' 
+                  : 'text-slate-700 dark:text-slate-300'
+              }`}>
+                {renderInlineText(text)}
+              </span>
+            </div>
+          );
+        }
+
+        // Sub-checkbox Item (indented)
+        if (line.trim().startsWith('- [ ]')) {
+             const text = line.replace(/^-\s*\[\s*\]\s*/, '');
+             return (
+                 <div key={idx} className="ml-8 pl-4 border-l-2 border-slate-100 dark:border-slate-800 py-1 text-sm text-slate-500 dark:text-slate-400">
+                    {renderInlineText(text)}
+                 </div>
+             )
+        }
+
+        // Header / Section Title within checklist
+        if (line.trim().startsWith('✅')) {
+             return (
+                 <h4 key={idx} className="mt-8 mb-4 text-xl font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                     {renderInlineText(line)}
+                 </h4>
+             )
+        }
+
+        // Standard bullet point
+        if (line.trim().startsWith('* ')) {
+            return (
+                <div key={idx} className="flex gap-3 mb-2">
+                    <span className="text-indigo-500 mt-1.5">•</span>
+                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                        {renderInlineText(line.substring(2))}
+                    </p>
+                </div>
+            )
+        }
+
+        // Empty line
+        if (!line.trim()) return <div key={idx} className="h-2"></div>;
+
+        // Default text
+        return (
+          <p key={idx} className="mb-2 leading-relaxed text-slate-700 dark:text-slate-300">
+             {renderInlineText(line)}
+          </p>
+        );
+      })}
+    </div>
+  );
+};
+
 export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = false }) => {
   
   // Advanced rendering logic to handle text formatting and code blocks
-  const renderContent = (text: string) => {
+  const renderContent = (text: string, cardId: string) => {
+    // Check if this card content is a checklist (heuristic: contains "* [ ]")
+    if (text.includes('* [ ]')) {
+        return <InteractiveChecklist content={text} storageKey={`checklist-${cardId}`} />;
+    }
+
     // Regex matches triple backtick code blocks: ``` content ```
     const codeBlockRegex = /(```[\s\S]*?```)/g;
     const parts = text.split(codeBlockRegex);
@@ -84,25 +237,7 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
 
              return (
                 <p key={pIdx} className="mb-6 last:mb-0 leading-8 text-lg text-slate-700 dark:text-slate-300 text-justify break-keep whitespace-pre-line">
-                {paragraph.split(/(\*\*.*?\*\*|`.*?`)/g).map((subPart, subIdx) => {
-                    // Bold text (**text**)
-                    if (subPart.startsWith('**') && subPart.endsWith('**')) {
-                    return (
-                        <strong key={subIdx} className="font-extrabold text-slate-800 dark:text-slate-100">
-                        {subPart.slice(2, -2)}
-                        </strong>
-                    );
-                    }
-                    // Inline code (`text`)
-                    if (subPart.startsWith('`') && subPart.endsWith('`')) {
-                    return (
-                        <code key={subIdx} className="px-1.5 py-0.5 mx-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-pink-600 dark:text-pink-400 font-mono text-sm border border-slate-200 dark:border-slate-700 shadow-sm">
-                        {subPart.slice(1, -1)}
-                        </code>
-                    );
-                    }
-                    return subPart;
-                })}
+                  {renderInlineText(paragraph)}
                 </p>
              )
           })}
@@ -174,7 +309,7 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
 
                   {/* Main Text Content */}
                   <div>
-                    {renderContent(item)}
+                    {renderContent(item, `${section.id}-${i}`)}
                   </div>
 
                   {/* Visual enhancement for 'Practical Tip' */}
