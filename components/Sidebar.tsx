@@ -49,24 +49,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
       
       {/* Navigation Area */}
-      <nav className="flex-1 p-6 space-y-10 overflow-y-auto custom-scrollbar hover:scroll-auto">
+      <nav className="flex-1 p-6 space-y-12 overflow-y-auto custom-scrollbar hover:scroll-auto">
         {/* Main Chapters */}
         {BOOK_DATA.chapters.map((chapter, idx) => (
-          <div key={chapter.id} className="space-y-3">
+          <div key={chapter.id} className="space-y-4">
             {/* Top Level Chapter Title */}
             <button
               onClick={() => handleNavClick(chapter.id)}
               className={`w-full text-left group transition-all duration-300`}
             >
-              <div className="flex items-center gap-3 mb-2">
-                 <span className={`flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold border ${
+              <div className="flex items-center gap-4 mb-2">
+                 <span className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold border ${
                      activeId === chapter.id 
                      ? 'bg-indigo-600 border-indigo-600 text-white' 
                      : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-400'
                  } transition-colors`}>
                     {idx + 1}
                  </span>
-                 <span className={`text-xs font-bold uppercase tracking-widest ${
+                 <span className={`text-sm font-bold uppercase tracking-widest ${
                    activeId === chapter.id 
                    ? 'text-indigo-600 dark:text-indigo-400' 
                    : 'text-slate-400 dark:text-slate-500'
@@ -74,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   {chapter.title.split(':')[0]}
                 </span>
               </div>
-              <div className={`pl-9 text-base font-bold transition-colors duration-300 ${
+              <div className={`pl-12 text-lg font-bold transition-colors duration-300 ${
                   activeId === chapter.id 
                     ? 'text-slate-900 dark:text-white' 
                     : 'text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400'
@@ -84,20 +84,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </button>
             
             {/* Sub Sections */}
-            <div className="ml-3 pl-6 border-l border-slate-200 dark:border-slate-800 space-y-1">
+            <div className="ml-4 pl-8 border-l border-slate-200 dark:border-slate-800 space-y-2">
               {chapter.content.map((subItem) => {
                 const isActive = activeId === (subItem.id || chapter.id);
                 return (
                   <button
                     key={subItem.id || subItem.title}
                     onClick={() => handleNavClick(subItem.id || chapter.id)}
-                    className={`w-full text-left py-2 px-3 rounded-lg flex items-center text-sm font-medium transition-all duration-200 ${
+                    className={`w-full text-left py-2.5 px-4 rounded-lg flex items-center text-base font-medium transition-all duration-200 ${
                       isActive
                         ? 'text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 translate-x-1 shadow-sm'
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50'
                     }`}
                   >
-                    <span>{subItem.title}</span>
+                    <span className="leading-tight">{subItem.title}</span>
                   </button>
                 );
               })}
@@ -106,24 +106,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ))}
 
         {/* Appendix */}
-        <div className="pt-6 border-t border-dashed border-slate-200 dark:border-slate-800/50">
-           <div className="space-y-3">
+        <div className="pt-8 border-t border-dashed border-slate-200 dark:border-slate-800/50">
+           <div className="space-y-4">
             <button
               onClick={() => handleNavClick(BOOK_DATA.appendix.id)}
-              className={`w-full text-left flex items-center group transition-all px-4 py-3 rounded-xl border ${
+              className={`w-full text-left flex items-center group transition-all px-5 py-4 rounded-xl border ${
                 activeId === BOOK_DATA.appendix.id
                   ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-900/50' 
                   : 'bg-slate-50 dark:bg-slate-800/30 border-transparent hover:border-amber-200 dark:hover:border-amber-900'
               }`}
             >
-              <Lightbulb size={20} className={`mr-3 ${
+              <Lightbulb size={24} className={`mr-4 ${
                 activeId === BOOK_DATA.appendix.id ? 'text-amber-500' : 'text-slate-400 group-hover:text-amber-500'
               }`} />
               <div>
-                  <span className={`block text-xs font-bold uppercase tracking-wider mb-0.5 ${
+                  <span className={`block text-xs font-bold uppercase tracking-wider mb-1 ${
                       activeId === BOOK_DATA.appendix.id ? 'text-amber-600 dark:text-amber-500' : 'text-slate-400'
                   }`}>Bonus</span>
-                  <span className={`block text-sm font-bold ${
+                  <span className={`block text-lg font-bold ${
                     activeId === BOOK_DATA.appendix.id ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-300'
                   }`}>
                     {BOOK_DATA.appendix.title}
@@ -131,7 +131,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             </button>
             
-             <div className="pl-2 space-y-1">
+             <div className="pl-2 space-y-2">
               {BOOK_DATA.appendix.content.map((subItem) => {
                  const isActive = activeId === (subItem.id || BOOK_DATA.appendix.id);
                  const isDeluxe = subItem.title.includes("DELUXE");
@@ -141,7 +141,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         <button
                             key={subItem.id || subItem.title}
                             onClick={() => handleNavClick(subItem.id || BOOK_DATA.appendix.id)}
-                            className={`w-full text-left py-3 px-4 mt-3 rounded-xl flex items-center text-xs font-bold transition-all duration-300 border relative overflow-hidden group shadow-md ${
+                            className={`w-full text-left py-3.5 px-5 mt-4 rounded-xl flex items-center text-sm font-bold transition-all duration-300 border relative overflow-hidden group shadow-md ${
                             isActive
                                 ? 'bg-gradient-to-r from-amber-100 to-yellow-50 dark:from-amber-900/40 dark:to-yellow-900/20 border-amber-300 dark:border-amber-600 text-amber-900 dark:text-amber-200 shadow-amber-500/20'
                                 : 'bg-gradient-to-r from-amber-50 to-white dark:from-amber-950/30 dark:to-slate-900 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-400 hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-amber-500/10'
@@ -150,7 +150,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                              {/* Shine Effect */}
                              <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-white/10 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out`}></div>
                             
-                            <Crown size={14} className={`mr-2 flex-shrink-0 ${isActive ? 'text-amber-600 dark:text-amber-400 animate-pulse' : 'text-amber-500'}`} fill={isActive ? "currentColor" : "none"} />
+                            <Crown size={16} className={`mr-3 flex-shrink-0 ${isActive ? 'text-amber-600 dark:text-amber-400 animate-pulse' : 'text-amber-500'}`} fill={isActive ? "currentColor" : "none"} />
                             <span className="relative z-10 break-keep leading-tight">{subItem.title}</span>
                         </button>
                     )
@@ -160,7 +160,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <button
                     key={subItem.id || subItem.title}
                     onClick={() => handleNavClick(subItem.id || BOOK_DATA.appendix.id)}
-                    className={`w-full text-left py-2 px-4 rounded-lg flex items-center text-xs font-semibold transition-all duration-200 ${
+                    className={`w-full text-left py-2.5 px-4 rounded-lg flex items-center text-sm font-semibold transition-all duration-200 ${
                       isActive
                         ? 'text-amber-700 dark:text-amber-300 bg-amber-50/50 dark:bg-amber-900/10'
                         : 'text-slate-500 dark:text-slate-400 hover:text-amber-700 dark:hover:text-amber-300'
