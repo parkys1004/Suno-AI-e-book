@@ -49,6 +49,26 @@ export const appendix: Chapter = {
       ]
     },
     {
+      id: "appendix-hacks-performance",
+      title: "Suno AI 실전 꿀팁 12선 (퍼포먼스 & 연출)",
+      items: [
+        "🎤 **1. 콘서트 & 감정 연출 (Atmosphere & Emotion)**\n\nAI 보컬에 인간적인 생동감을 불어넣는 비법입니다.\n\n*   **🏟️ 콘서트 스타일 인트로:**\n    라이브 현장감을 원한다면 첫 절 시작 전이나 아웃트로에 다음 태그를 넣으세요.\n    > `[intro stadium crowd ambience big applause cheering distant chanting hey stage reverb]`\n\n*   **😭 감정 태그 (Emotion Tags):**\n    가사 라인 앞에 괄호 태그를 넣어 보컬의 감정을 섬세하게 지시합니다. 두 가지 감정을 섞으면 더 극적입니다.\n    > *예시:* `[spoken word crying] Why did you leave me [laughter]`\n    > *태그:* `[crying voice]`, `[angry tone]`, `[mocking laughter]`",
+        "🗣️ **2. 보컬 테크닉 강화 (Vocal Tech)**\n\n평범한 AI 목소리를 벗어나 강렬한 캐릭터를 만듭니다.\n\n*   **🤬 스크림 & 그라울링:**\n    공격적인 느낌을 원한다면 `[scream]`, `[growl]` 태그를 넣고 **가사를 대문자(UPPERCASE)**로 쓰세요. 모음을 길게 늘리면(GOOOO) 타격감이 배가됩니다.\n\n*   **📢 대문자 강조 (Emphasis):**\n    가사 중 특정 단어를 **대문자**로 쓰면 Suno가 강세를 둡니다. (섹션당 1~3회 권장)\n\n*   **👻 신비로운 보컬 드론:**\n    가사 최상단에 `[intro] [vocal drone]`을 적고 `(deep resonant)`로 톤을 묘사한 뒤, 말줄임표(...)를 길게 늘려 쓰면 시네마틱한 인트로나 나옵니다.",
+        "🏗️ **3. 곡의 구조와 스케일 (Structure)**\n\n곡의 다이내믹을 극대화하는 구조적 장치들입니다.\n\n*   **🏰 웅장한 코러스 (Massive Chorus):**\n    합창단 느낌을 내려면 코러스에 **`[Multiple voice chorus SATB]`** 태그를 추가하세요. 소프라노, 알토, 테너, 베이스가 쌓입니다.\n\n*   **🎷 악기 솔로 브레이크:**\n    `[instrumental break saxophone]` 처럼 악기 이름을 지정한 태그를 단독 줄에 작성하세요. 연주 직전에 대사(Spoken)를 넣으면 임팩트가 더 큽니다.\n\n*   **💣 빌드업 & 드랍 (EDM):**\n    클라이맥스 직전에 `[buildup]`을 배치하고, 베이스가 터져야 하는 정확한 위치에 `[drop]`을 넣으세요.",
+        "✨ **4. 디테일과 특수 효과 (Misc)**\n\n*   **🔊 보컬 효과음 (Adlibs):**\n    `[adlib boom]`, `[adlib clap]`, `[adlib hey]`처럼 괄호 안에 태그를 넣고 대문자로 작성하여 비트감을 살리세요.\n\n*   **👽 가상 언어 & 휘파람:**\n    엘프어, 클링온어 같은 가상 언어나 훅(Hook)을 휘파람 소리로 채우는 연출도 가능합니다.\n\n*   **💬 내레이션 (Spoken):**\n    노래가 아닌 대사는 앞에 **`[spoken word]`** 태그를 달고, 내용은 **소괄호 `()`**로 묶어주어야 대화로 인식합니다."
+      ]
+    },
+    {
+      id: "appendix-hacks-sound",
+      title: "Suno AI 사운드 디자인 (고급 기법)",
+      items: [
+        "👥 **1. 완벽한 듀엣 가이드 (Perfect Duets)**\n\nSuno가 두 명의 목소리를 헷갈리지 않게 하려면 3중 잠금 장치가 필요합니다.\n\n*   **① 스타일 프롬프트:** \"Duet, John (Baritone) and Jane (Alto)\" 처럼 구체적으로 묘사하세요.\n*   **② 헤더 선언:** 가사 최상단에 `[duet John male and Jane female]`을 적으세요.\n*   **③ 파트 배분:** 한 줄씩 교차하지 말고, 1절 전체는 `[John]`, 2절 전체는 `[Jane]`, 코러스는 `[Both]`로 큼직하게 나누는 것이 안전합니다. 잘 만들어진 듀엣 곡은 반드시 **'페르소나'**로 저장하세요.",
+        "🎻 **2. 악기와 오케스트라 (Instruments)**\n\n*   **🚫 악기 없는 아카펠라:**\n    프롬프트에 \"no instruments\", \"vocals only\"를 적고, 리듬은 \"claps and stomps\"로 지정하세요. 스타일 내용을 **가사 최상단 헤더**에도 한 번 더 적어주는 것이 핵심 꿀팁입니다.\n\n*   **🎬 시네마틱 오케스트라:**\n    `[intro]`, `[buildup]`, `[climax]`, `[ending]` 등 구간별로 편곡 방향을 가이드해 주면 Suno가 영화 음악처럼 웅장하게 만들어줍니다.\n\n*   **🎸 점진적 악기 빌드업:**\n    `[guitar solo break]` 밑에 \"ascending arpeggio... gradual crescendo\" 처럼 연주 방식을 문장으로 묘사하면 놀라운 솔로가 나옵니다.",
+        "🎙️ **3. 고급 보컬 톤 메이킹 (Advanced Tone)**\n\n*   **🧛‍♂️ 깊은 남성 보컬 (Deep Male):**\n    가사 헤더에 음역대를 정의하세요. (예: `E2 to E4`). 그리고 `exclude alto, soprano` 처럼 나오지 말아야 할 소리를 명시합니다.\n\n*   **💃 소름 돋는 가성 (Falsetto):**\n    `[very high falsetto]`, `[piercing vocals]` 태그를 사용하고, 가사에 **개방 모음(O, I, Fly, High)**을 배치하여 고음을 유도하세요.\n\n*   **🌍 정확한 악센트/사투리:**\n    단순 지시로는 부족합니다. ChatGPT에게 \"스코틀랜드 억양으로 소리 나는 대로 적어줘\"라고 한 뒤, 그 **발음 기호식 텍스트**를 가사로 넣으세요.",
+        "🎛️ **4. 괄호의 올바른 사용법 (Syntax)**\n\nSuno가 지시어를 가사로 착각하고 부르는 것을 막으세요.\n\n*   **대괄호 `[ ]`:** 노래하지 않는 **'지시어'** (짧게 작성)\n*   **소괄호 `( )`:** 가사나 애드립으로 인식하여 **'부를 확률 높음'**\n*   **응용:** `[spoken word] (사랑한다고 말해)` 처럼 조합하면 완벽합니다."
+      ]
+    },
+    {
       id: "appendix-5",
       title: "자주 묻는 질문 (FAQ) - Suno AI 문제 해결 가이드",
       items: [
