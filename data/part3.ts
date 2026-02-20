@@ -2,7 +2,7 @@ import { Chapter } from '../types';
 
 export const part3: Chapter = {
   id: "part-3",
-  title: "3부: [문제 해결] 월 100만 원 수익 파이프라인",
+  title: "3부: [문제 해결] 수익화 파이프라인",
   subTitle: "글로벌 유통 및 마케팅 전략",
   content: [
     {
