@@ -334,19 +334,19 @@ const App: React.FC = () => {
       </div>
 
       {/* Fixed Kmong Purchase Button (Mobile/Tablet Only) */}
-      <div className="fixed bottom-0 left-0 w-full p-4 pb-8 lg:hidden z-50 pointer-events-none">
-        <div className="max-w-md mx-auto pointer-events-auto">
+      <div className="fixed bottom-6 right-6 lg:hidden z-50 pointer-events-none">
+        <div className="pointer-events-auto">
           <a
             href="https://kmong.com/self-marketing/730531/ZQh4nXZpK5"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-[#ffd400] text-slate-900 font-black shadow-[0_10px_40px_rgba(255,212,0,0.4)] hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group"
+            className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#ffd400] text-slate-900 font-bold shadow-[0_4px_20px_rgba(255,212,0,0.4)] hover:scale-105 transition-all duration-300 relative overflow-hidden group"
           >
             {/* Shimmer Effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out"></div>
             
-            <ShoppingBag size={22} className="text-slate-900" />
-            <span className="text-base tracking-tight">크몽에서 전자책 구매하기</span>
+            <ShoppingBag size={20} className="text-slate-900" />
+            <span className="text-sm font-black tracking-tight whitespace-nowrap">크몽 전자책 구매</span>
           </a>
         </div>
       </div>

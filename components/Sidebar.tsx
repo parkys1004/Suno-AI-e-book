@@ -179,12 +179,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Footer / Theme Toggle */}
       <div className="p-6 border-t border-slate-200/50 dark:border-slate-800/50 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md">
         
-        {/* Kmong Button (Desktop) */}
+        {/* Kmong Button (Desktop Only - Hidden on Mobile) */}
         <a
           href="https://kmong.com/self-marketing/730531/ZQh4nXZpK5"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full py-3 mb-4 rounded-xl bg-[#ffd400] text-slate-900 font-bold shadow-lg shadow-yellow-400/20 hover:shadow-yellow-400/40 hover:-translate-y-0.5 transition-all duration-300 group"
+          className="hidden lg:flex items-center justify-center gap-2 w-full py-3 mb-4 rounded-xl bg-[#ffd400] text-slate-900 font-bold shadow-lg shadow-yellow-400/20 hover:shadow-yellow-400/40 hover:-translate-y-0.5 transition-all duration-300 group"
         >
           <ShoppingBag size={18} className="text-slate-900" />
           <span>크몽 전자책 구매</span>
