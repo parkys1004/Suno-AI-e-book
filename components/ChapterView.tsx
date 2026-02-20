@@ -407,20 +407,7 @@ export const ChapterView: React.FC<ChapterViewProps> = ({ chapter, isAppendix = 
                       {renderContent(item, `${section.id}-${i}`)}
                     </div>
 
-                    {/* Visual enhancement for 'Practical Tip' */}
-                    {item.includes('예시:') && (
-                      <div className="mt-8 p-6 bg-indigo-50/80 dark:bg-indigo-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col sm:flex-row items-start gap-5 backdrop-blur-sm text-left">
-                        <div className="p-3 bg-white dark:bg-indigo-900 rounded-full shadow-md text-indigo-600 dark:text-indigo-300">
-                          <PlayCircle size={24} fill="currentColor" className="text-white dark:text-indigo-900" />
-                        </div>
-                        <div>
-                           <span className="text-xs font-black uppercase tracking-widest text-indigo-500 dark:text-indigo-400 block mb-2">Practical Tip</span>
-                           <p className="text-base font-medium text-indigo-900 dark:text-indigo-100 opacity-90 leading-relaxed whitespace-pre-line">
-                              이 예시는 수익화 과정에서 빈번하게 마주치는 상황입니다. 반드시 메모해두세요.
-                           </p>
-                        </div>
-                      </div>
-                    )}
+
                   </div>
                 ))}
               </div>
